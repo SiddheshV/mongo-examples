@@ -53,15 +53,7 @@ where
 
 #### Output
 
-The response contains a document with the following fields
-
-| Field  | Type   | Description                                                                                                |
-|--------|--------|------------------------------------------------------------------------------------------------------------|
-| ok     | int    | Status of response. 1 == success.  0 == failure                                                            |
-| code   | int    |  [Optional] Only returned when the command failed (i.e. ok == 0). Contains the MongoDB error code.         |
-| errMsg | string |  [Optional] Only returned when the command failed (i.e. ok == 0). Contains a user friendly error message.  |
-
-
+Returns a default custom command response.  Check [Default output of custom command](#default-output-of-custom-command)
 
 #### Examples
 
@@ -112,6 +104,117 @@ To update the provisioned throughput of a database with name "test" to 1000 RUs,
 ```Mongo Shell
     use test
     db.runCommand({customAction: "UpdateDatabase", offerThroughput: 1000 });
+```
+
+### Get Database
+
+The Get Database custom command returns the database object. The database name is used from the databaes context against which the command is executed.
+```
+{
+  customAction: "GetDatabase"
+}
+```
+where
+
+| Field           | Type   | Description                                              |
+|-----------------|--------|----------------------------------------------------------|
+| customAction    | string | Name of the custom command. Must be "GetDatabase"        |
+
+#### Output
+
+If the command succeeds, the response contains a document with the following fields
+
+| Field  | Type   | Description                                                                             |
+|--------|--------|-----------------------------------------------------------------------------------------|
+| ok     | int    | Status of response. 1 == success.  0 == failure                                         |
+| database     | string    | Name of the database                                                           |
+| provisionedThroughput     | int    | [Optional] Provisioned Throughput to set on the database             |
+
+If the command fails, a default custom command response is returned.  Check [Default output of custom command](#default-output-of-custom-command)
+
+#### Examples
+
+**Get the database**
+
+To get the database object for a database named "test", use the following command
+
+```Mongo Shell
+    use test
+    db.runCommand({customAction: "GetDatabase"});
+```
+
+### Update Collection
+
+The Update Collection custom command updates the properties associated with the specified collection.  
+```
+{
+  customAction: "UpdateCollection",
+  collection: <string>,
+  offerThroughput: <int> 
+}
+```
+where
+
+| Field           | Type   | Description                                              |
+|-----------------|--------|----------------------------------------------------------|
+| customAction    | string | Name of the custom command. Must be "UpdateCollection"   |
+| collection      | string | Name of the collection                                   |
+| offerThroughput | int    | Provisioned Throughput to set on the collection          |
+
+#### Default Output
+
+Returns a default custom command response.  Check [Default output of custom command](#default-output-of-custom-command)
+
+#### Examples
+
+**Update the provisioned throughput associated with a collection**
+
+To update the provisioned throughput of a collection with name "testCollection" to 1000 RUs, use the following command
+
+```Mongo Shell
+    use test
+    db.runCommand({customAction: "UpdateCollection", collection: "testCollection", offerThroughput: 1000 });
+```
+
+### Get Collection
+
+The Get Collection custom command returns the collection object. 
+```
+{
+  customAction: "GetCollection",
+  collection: <string>
+}
+```
+where
+
+| Field           | Type   | Description                                              |
+|-----------------|--------|----------------------------------------------------------|
+| customAction    | string | Name of the custom command. Must be "GetCollection"      |
+| collection      | string | Name of the collection                                   |
+
+#### Output
+
+If the command succeeds, the response contains a document with the following fields
+
+| Field                     | Type     | Description                                                          |
+|---------------------------|----------|----------------------------------------------------------------------|
+| ok                        | int      | Status of response. 1 == success.  0 == failure                      |
+| database                  | string   | Name of the database                                                 |
+| collection                | string   | Name of the collection                                               |
+| shardKeyDefinition        | document | [Optional] Index specification document used as a shard key          |
+| provisionedThroughput     | int      | [Optional] Provisioned Throughput to set on the collection           |
+
+If the command fails, a default custom command response is returned.  Check [Default output of custom command](#default-output-of-custom-command)
+
+#### Examples
+
+**Get the collection**
+
+To get the collection object for a collection named "testCollection", use the following command
+
+```Mongo Shell
+    use test
+    db.runCommand({customAction: "GetCollection", collection: "testCollection"});
 ```
 
 ### Default output of custom command
