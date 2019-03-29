@@ -143,6 +143,54 @@ To get the database object for a database named "test", use the following comman
     db.runCommand({customAction: "GetDatabase"});
 ```
 
+### Create Collection
+
+The Create Collection custom command creates a new MongoDB collection.  The database name is used from the databaes context against which the command is executed.
+
+The format of the Create Collection command is as follows
+```
+{
+  customAction: "CreateCollection",
+  collection: <string>,
+  offerThroughput: <int>,
+  shardKey: <string>  
+}
+```
+where
+
+| Field           | Type   | Description                                              |
+|-----------------|--------|----------------------------------------------------------|
+| customAction    | string | Name of the custom command. Must be "CreateDatabase"     |
+| collection      | string | Name of the collection                                   |
+| offerThroughput | int    | [Optional] Provisioned Throughput to set on the database |
+| shardKey        | string | [Optional] Shard Key path to create a sharded collection |
+
+
+#### Output
+
+Returns a default custom command response.  Check [Default output of custom command](#default-output-of-custom-command)
+
+#### Examples
+
+**Create a unsharded collection**
+
+To create a unsharded collection with name "testCollection" and provisioned throughput of 1000 RUs, use the following command  
+
+```Mongo Shell
+    use test
+    db.runCommand({customAction: "CreateCollection", collection: "testCollection", offerThroughput: 1000});
+``` 
+
+**Create a sharded collection**
+
+To create a sharded collection with name "testCollection" and provisioned throughput of 1000 RUs, use the following command
+
+```Mongo Shell
+    use test
+    db.runCommand({customAction: "CreateCollection", collection: "testCollection", offerThroughput: 1000, shardKey: "a.b" });
+```
+
+
 ### Update Collection
 
 The Update Collection custom command updates the properties associated with the specified collection.  
